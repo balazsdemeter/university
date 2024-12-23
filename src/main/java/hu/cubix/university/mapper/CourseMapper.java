@@ -10,15 +10,19 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface CourseMapper {
 
-    @Named("Summary")
+    @Named("summaryList")
     @Mapping(target = "students", ignore = true)
     @Mapping(target = "teachers", ignore = true)
-    CourseDto courseSummaryToDto(Course course);
+    List<CourseDto> courseSummaryListToDtos(List<Course> courseList);
 
     CourseDto courseToDto(Course course);
+
+    List<CourseDto> courseListToDtos(List<Course> courses);
 
     Course dtoToCourse(CourseDto courseDto);
 

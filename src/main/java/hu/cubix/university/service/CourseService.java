@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,12 +18,15 @@ public class CourseService {
     private final CourseMapper courseMapper;
 
     public List<CourseDto> search(Predicate predicate, boolean full, Pageable pageable) {
-        Iterable<Course> courses = courseRepository.findAll(predicate, pageable.getSort());
-        List<CourseDto> courseDtos = new ArrayList<>();
-        courses.forEach(course ->
-            courseDtos.add(full ? courseMapper.courseToDto(course) : courseMapper.courseSummaryToDto(course))
-        );
-        return courseDtos;
+        List<Course> courses = courseRepository.findAll(predicate, pageable).getContent();
+        if (!full) {
+            return courseMapper.courseSummaryListToDtos(courses);
+        }
+
+        List<Integer> ids = courses.stream().map(Course::getId).toList();
+        courses = courseRepository.findAllWithStudentsById(ids);
+        courses = courseRepository.findAllWithTeachersById(ids, pageable.getSort());
+        return courseMapper.courseListToDtos(courses);
     }
 
     public CourseDto findById(Integer id) {

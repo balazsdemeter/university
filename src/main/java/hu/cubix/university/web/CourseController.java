@@ -2,10 +2,7 @@ package hu.cubix.university.web;
 
 import com.querydsl.core.types.Predicate;
 import hu.cubix.university.dto.CourseDto;
-import hu.cubix.university.dto.SearchDto;
-import hu.cubix.university.mapper.CourseMapper;
 import hu.cubix.university.model.Course;
-import hu.cubix.university.repository.CourseRepository;
 import hu.cubix.university.service.CourseService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

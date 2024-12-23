@@ -1,6 +1,5 @@
 package hu.cubix.university.web;
 
-import hu.cubix.university.dto.StudentDto;
 import hu.cubix.university.dto.TeacherDto;
 import hu.cubix.university.service.TeacherService;
 import jakarta.validation.constraints.NotNull;

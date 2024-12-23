@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface StudentMapper {
     StudentDto studentToDto(Student student);
+
     Student dtoToStudent(StudentDto studentDto);
 
     @Mapping(target = "teachers", ignore = true)
