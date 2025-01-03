@@ -1,18 +1,93 @@
 package hu.cubix.university.service;
 
+import hu.cubix.university.aspect.Retryable;
+import hu.cubix.university.dto.CourseDto;
 import hu.cubix.university.dto.StudentDto;
 import hu.cubix.university.mapper.StudentMapper;
+import hu.cubix.university.model.Course;
+import hu.cubix.university.model.HistoryData;
+import hu.cubix.university.model.Student;
 import hu.cubix.university.repository.StudentRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.DefaultRevisionEntity;
+import org.hibernate.envers.RevisionType;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.criteria.AuditCriterion;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 @RequiredArgsConstructor
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private final MockService mockService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public StudentDto findById(Integer id) {
         return studentMapper.studentToDto(studentRepository.findById(id).orElse(null));
+    }
+
+    @Scheduled(cron = "${student.sync.timer}")
+    @SchedulerLock(name = "syncStudents")
+    @Async
+    @Retryable
+    public void syncStudents() throws TimeoutException {
+        List<Student> students = studentRepository.findAll();
+        for (Student student : students) {
+            int numberOfFreeSemesters = mockService.getNumberOfFreeSemesters(student.getExternalId());
+            student.setNumberOfFreeSemesters(numberOfFreeSemesters);
+            studentRepository.save(student);
+        }
+    }
+
+    @Transactional
+    @SuppressWarnings({"unchecked"})
+    public List<HistoryData<StudentDto>> getHistory(Date date) {
+        List<HistoryData<Student>> studentList = AuditReaderFactory.get(entityManager)
+                .createQuery()
+                .forRevisionsOfEntity(Student.class, false, true)
+                .getResultList()
+                .stream()
+                .map(o -> {
+                    Object[] objArray = (Object[]) o;
+                    DefaultRevisionEntity revisionEntity = (DefaultRevisionEntity) objArray[1];
+                    Student student = (Student) objArray[0];
+
+                    return new HistoryData<>(
+                            student,
+                            (RevisionType) objArray[2],
+                            revisionEntity.getId(),
+                            revisionEntity.getRevisionDate()
+                    );
+                })
+                .toList();
+
+        List<HistoryData<StudentDto>> studentDtosWithHistory = new ArrayList<>();
+
+        studentList.forEach(hd -> studentDtosWithHistory.add(
+                new HistoryData<>(
+                        studentMapper.studentToDto(hd.getData()),
+                        hd.getRevType(),
+                        hd.getRevision(),
+                        hd.getDate()
+                )
+        ));
+
+        return studentDtosWithHistory;
     }
 }

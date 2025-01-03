@@ -7,6 +7,7 @@ import hu.cubix.university.repository.CourseRepository;
 import hu.cubix.university.repository.StudentRepository;
 import hu.cubix.university.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,12 +21,22 @@ public class InitDbService {
     private final CourseRepository courseRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Transactional
     public void deleteDb() {
         courseRepository.deleteAll();
         teacherRepository.deleteAll();
         studentRepository.deleteAll();
+    }
+
+    @Transactional
+    public void deleteAudTables() {
+        jdbcTemplate.update("DELETE FROM course_student_aud");
+        jdbcTemplate.update("DELETE FROM course_teacher_aud");
+        jdbcTemplate.update("DELETE FROM student_aud");
+        jdbcTemplate.update("DELETE FROM teacher_aud");
+        jdbcTemplate.update("DELETE FROM course_aud");
     }
 
     @Transactional

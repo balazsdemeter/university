@@ -13,6 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -25,6 +26,7 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Cacheable
 @Entity
+@Audited
 public class Student {
     @Id
     @GeneratedValue
@@ -36,6 +38,10 @@ public class Student {
     private LocalDate birthDate;
 
     private int semester;
+
+    private Integer externalId;
+
+    private Integer numberOfFreeSemesters;
 
     @ManyToMany
     @JoinTable(
