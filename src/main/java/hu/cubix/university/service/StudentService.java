@@ -23,6 +23,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +60,7 @@ public class StudentService {
 
     @Transactional
     @SuppressWarnings({"unchecked"})
-    public List<HistoryData<StudentDto>> getHistory(Date date) {
+    public List<HistoryData<StudentDto>> getHistory(LocalDateTime dateTime) {
         List<HistoryData<Student>> studentList = AuditReaderFactory.get(entityManager)
                 .createQuery()
                 .forRevisionsOfEntity(Student.class, false, true)
@@ -76,6 +79,10 @@ public class StudentService {
                     );
                 })
                 .toList();
+
+        Date date = java.util.Date
+                .from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+        studentList = studentList.stream().filter(studentHistoryData -> studentHistoryData.getDate().before(date)).toList();
 
         List<HistoryData<StudentDto>> studentDtosWithHistory = new ArrayList<>();
 
