@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -42,6 +43,10 @@ public class Student {
     private Integer externalId;
 
     private Integer numberOfFreeSemesters;
+
+    @OneToMany
+    @JoinColumn(name = "student_id")
+    private Set<Image> images;
 
     @ManyToMany
     @JoinTable(

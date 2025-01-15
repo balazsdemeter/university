@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,5 +42,39 @@ public class StudentController implements StudentControllerApi {
         List<HistoryData<StudentDto>> history = studentService.getHistory(dateTime);
         history.forEach(studentDtoHistoryData -> studentDtos.add(historyDataMapper.studentHistoryDataToDto(studentDtoHistoryData)));
         return ResponseEntity.ok(studentDtos);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteStudentImage(Integer id) {
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<String> getImageForStudent(Integer id) {
+        Long imageId = studentService.findImage(id);
+        if (imageId == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return getImage(imageId);
+    }
+
+    @Override
+    public ResponseEntity<String> uploadImageForStudent(Integer id, MultipartFile content) {
+        try {
+            Long imageId = studentService.createOrUpdateImage(id, content.getBytes());
+            if (imageId == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return getImage(imageId);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private ResponseEntity<String> getImage(Long imageId) {
+        return ResponseEntity.ok("/api/images/" + imageId);
     }
 }

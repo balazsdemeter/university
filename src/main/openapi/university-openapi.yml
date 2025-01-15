@@ -156,6 +156,81 @@ paths:
                   $ref: '#/components/schemas/HistoryDataCourseDto'
       x-stoplight:
         id: 05lu8w7ql6sc2
+  '/api/students/{id}/images':
+    parameters:
+      - schema:
+          type: integer
+        name: id
+        in: path
+        required: true
+    post:
+      summary: Your POST endpoint
+      tags:
+        - student-controller
+      responses:
+        default:
+          description: Default
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: uploadImageForStudent
+      x-stoplight:
+        id: kxn00belm7z38
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  format: binary
+                  x-stoplight:
+                    id: ncrjbg8uwb6ja
+    get:
+      summary: Your GET endpoint
+      tags:
+        - student-controller
+      responses:
+        default:
+          description: Default
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: getImageForStudent
+      x-stoplight:
+        id: 7xanho5jsc98s
+    delete:
+      summary: Your DELETE endpoint
+      tags:
+        - student-controller
+      responses: {}
+      operationId: deleteStudentImage
+      x-stoplight:
+        id: asubla6g6x4d2
+  '/api/images/{id}':
+    parameters:
+      - schema:
+          type: integer
+          format: int64
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - image-controller
+      responses:
+        '200':
+          description: OK
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+      operationId: downloadImage
 components:
   schemas:
     CourseDto:
