@@ -15,7 +15,6 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionType;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 @RequiredArgsConstructor
@@ -124,5 +123,17 @@ public class StudentService {
         Image image = student.getImages().stream().findFirst().orElse(null);
 
         return image != null ? image.getId() : null;
+    }
+
+    @Transactional
+    public void deleteImage(int id) {
+        Student student = studentRepository.findById(id).orElse(null);
+        if (student != null) {
+            Set<Image> images = student.getImages();
+            if (images != null) {
+                images.clear();
+            }
+            studentRepository.save(student);
+        }
     }
 }

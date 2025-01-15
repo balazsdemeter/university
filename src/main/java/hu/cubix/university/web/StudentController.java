@@ -46,6 +46,7 @@ public class StudentController implements StudentControllerApi {
 
     @Override
     public ResponseEntity<Void> deleteStudentImage(Integer id) {
+        studentService.deleteImage(id);
         return ResponseEntity.ok().build();
     }
 
