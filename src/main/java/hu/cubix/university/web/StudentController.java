@@ -2,18 +2,22 @@ package hu.cubix.university.web;
 
 import hu.cubix.university.api.StudentControllerApi;
 import hu.cubix.university.api.model.HistoryDataStudentDto;
+import hu.cubix.university.api.model.SendMessageRequest;
 import hu.cubix.university.api.model.StudentDto;
 import hu.cubix.university.mapper.HistoryDataMapper;
 import hu.cubix.university.model.HistoryData;
 import hu.cubix.university.service.StudentService;
+import hu.cubix.university.ws.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +28,8 @@ public class StudentController implements StudentControllerApi {
     private final NativeWebRequest nativeWebRequest;
     private final StudentService studentService;
     private final HistoryDataMapper historyDataMapper;
+
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public Optional<NativeWebRequest> getRequest() {
@@ -77,5 +83,15 @@ public class StudentController implements StudentControllerApi {
 
     private ResponseEntity<String> getImage(Long imageId) {
         return ResponseEntity.ok("/api/images/" + imageId);
+    }
+
+    @Override
+    public ResponseEntity<Void> sendMessage(Integer userId, Integer courseId, SendMessageRequest sendMessageRequest) {
+        StudentDto studentDto = studentService.findById(userId);
+        if (studentDto != null) {
+            this.messagingTemplate.convertAndSend("/topic/chat/" + courseId, new ChatMessage(sendMessageRequest.getMessage(),
+                    studentDto.getName(), OffsetDateTime.now()));
+        }
+        return ResponseEntity.ok().build();
     }
 }

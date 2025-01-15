@@ -231,6 +231,38 @@ paths:
                 type: string
                 format: binary
       operationId: downloadImage
+  /api/students/chat:
+    put:
+      summary: Your PUT endpoint
+      tags:
+        - student-controller
+      operationId: sendMessage
+      x-stoplight:
+        id: hygomyu2pjydj
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  x-stoplight:
+                    id: 8dtfw0hanwrol
+      responses:
+        default:
+          description: Default
+      parameters:
+        - schema:
+            type: integer
+            format: int32
+          in: query
+          name: userId
+        - schema:
+            type: integer
+            format: int32
+          in: query
+          name: courseId
 components:
   schemas:
     CourseDto:
