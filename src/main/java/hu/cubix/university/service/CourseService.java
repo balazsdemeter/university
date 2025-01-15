@@ -5,6 +5,7 @@ import hu.cubix.university.api.model.CourseDto;
 import hu.cubix.university.mapper.CourseMapper;
 import hu.cubix.university.model.Course;
 import hu.cubix.university.model.HistoryData;
+import hu.cubix.university.model.Student;
 import hu.cubix.university.repository.CourseRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -85,5 +87,28 @@ public class CourseService {
         ));
 
         return courseDtosWithHistory;
+    }
+
+    @Transactional
+    public Integer getAverageSemesters() {
+        System.out.println("DelayService.getDelay called at thread " + Thread.currentThread().getName());
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+        }
+
+        List<Course> courses = courseRepository.findAll();
+        int semesterCount = 0;
+        int studentCount = 0;
+
+        for (Course course : courses) {
+            Set<Student> students = course.getStudents();
+            studentCount += students.size();
+            for (Student student : students) {
+                semesterCount += student.getSemester();
+            }
+        }
+
+        return semesterCount/studentCount;
     }
 }
