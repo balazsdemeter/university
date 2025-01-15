@@ -1,35 +1,44 @@
 package hu.cubix.university.web;
 
-import hu.cubix.university.dto.StudentDto;
+import hu.cubix.university.api.StudentControllerApi;
+import hu.cubix.university.api.model.HistoryDataStudentDto;
+import hu.cubix.university.api.model.StudentDto;
+import hu.cubix.university.mapper.HistoryDataMapper;
 import hu.cubix.university.model.HistoryData;
 import hu.cubix.university.service.StudentService;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/students")
-public class StudentController {
-
+public class StudentController implements StudentControllerApi {
+    private final NativeWebRequest nativeWebRequest;
     private final StudentService studentService;
+    private final HistoryDataMapper historyDataMapper;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<StudentDto> findById(@PathVariable @NotNull Integer id) {
+    @Override
+    public Optional<NativeWebRequest> getRequest() {
+        return Optional.of(nativeWebRequest);
+    }
+
+    @Override
+    public ResponseEntity<StudentDto> findStudentById(Integer id) {
         StudentDto studentDto = studentService.findById(id);
         return studentDto == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(studentDto);
     }
 
-    @GetMapping("/history")
-    public List<HistoryData<StudentDto>> getHistory(@RequestParam("dateTime") @NotNull LocalDateTime dateTime) {
-        return studentService.getHistory(dateTime);
+    @Override
+    public ResponseEntity<List<HistoryDataStudentDto>> getHistory(LocalDateTime dateTime) {
+        List<HistoryDataStudentDto> studentDtos = new ArrayList<>();
+        List<HistoryData<StudentDto>> history = studentService.getHistory(dateTime);
+        history.forEach(studentDtoHistoryData -> studentDtos.add(historyDataMapper.studentHistoryDataToDto(studentDtoHistoryData)));
+        return ResponseEntity.ok(studentDtos);
     }
 }

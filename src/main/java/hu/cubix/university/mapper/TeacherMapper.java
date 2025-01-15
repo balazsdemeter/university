@@ -1,7 +1,7 @@
 package hu.cubix.university.mapper;
 
-import hu.cubix.university.dto.CourseDto;
-import hu.cubix.university.dto.TeacherDto;
+import hu.cubix.university.api.model.CourseDto;
+import hu.cubix.university.api.model.TeacherDto;
 import hu.cubix.university.model.Course;
 import hu.cubix.university.model.Teacher;
 import org.mapstruct.Mapper;

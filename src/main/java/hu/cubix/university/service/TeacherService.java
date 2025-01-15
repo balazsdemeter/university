@@ -1,6 +1,6 @@
 package hu.cubix.university.service;
 
-import hu.cubix.university.dto.TeacherDto;
+import hu.cubix.university.api.model.TeacherDto;
 import hu.cubix.university.mapper.TeacherMapper;
 import hu.cubix.university.model.Teacher;
 import hu.cubix.university.repository.TeacherRepository;

@@ -1,7 +1,7 @@
 package hu.cubix.university.service;
 
 import com.querydsl.core.types.Predicate;
-import hu.cubix.university.dto.CourseDto;
+import hu.cubix.university.api.model.CourseDto;
 import hu.cubix.university.mapper.CourseMapper;
 import hu.cubix.university.model.Course;
 import hu.cubix.university.model.HistoryData;

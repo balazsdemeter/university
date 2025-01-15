@@ -1,28 +1,23 @@
 package hu.cubix.university.web;
 
-import hu.cubix.university.api.TeacherControllerApi;
 import hu.cubix.university.api.model.TeacherDto;
 import hu.cubix.university.service.TeacherService;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.NativeWebRequest;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
-@RestController
-public class TeacherController implements TeacherControllerApi {
-    private final NativeWebRequest nativeWebRequest;
+//@RestController
+@RequestMapping("/api/teachers")
+public class TeacherControllerOld {
     private final TeacherService findById;
 
-    @Override
-    public Optional<NativeWebRequest> getRequest() {
-        return Optional.of(nativeWebRequest);
-    }
-
-    @Override
-    public ResponseEntity<TeacherDto> findTeacherById(Integer id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<TeacherDto> findById(@PathVariable @NotNull Integer id) {
         TeacherDto teacherDto = findById.findById(id);
         return teacherDto == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(teacherDto);
     }
