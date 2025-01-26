@@ -136,4 +136,8 @@ public class StudentService {
             studentRepository.save(student);
         }
     }
+
+    public Student findByName(String name) {
+        return studentRepository.findStudentByName(name).orElse(null);
+    }
 }

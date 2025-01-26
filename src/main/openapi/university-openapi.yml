@@ -206,7 +206,7 @@ paths:
       summary: Your DELETE endpoint
       tags:
         - student-controller
-      responses: {}
+      responses: { }
       operationId: deleteStudentImage
       x-stoplight:
         id: asubla6g6x4d2
@@ -263,6 +263,177 @@ paths:
             format: int32
           in: query
           name: courseId
+  /api/courses/addToTimeTable:
+    post:
+      summary: Your POST endpoint
+      tags:
+        - course-controller
+      responses:
+        default:
+          description: Default
+      operationId: addToTimeTable
+      x-stoplight:
+        id: q4fb4pt7q7y9f
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: courseId
+        - schema:
+            type: string
+          in: query
+          name: startTime
+        - schema:
+            type: string
+          in: query
+          name: endTime
+        - schema:
+            type: string
+          in: query
+          name: dayOfWeek
+        - schema:
+            type: string
+          in: query
+          name: semester
+  /api/timetable/registerDayOff:
+    post:
+      summary: Your POST endpoint
+      tags:
+        - timeTable-controller
+      responses:
+        default:
+          description: Default
+      operationId: registerDayOff
+      x-stoplight:
+        id: 3a9b35uvqg3ul
+      parameters:
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: dayOffDate
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: swappedDate
+  /api/timetable/getTimeTableForTeacher:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - timeTable-controller
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeTableDto'
+      operationId: getTimeTableForTeacher
+      x-stoplight:
+        id: 9ggh69z20mau6
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: teacherName
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: courseDate
+        - schema:
+            type: integer
+          in: query
+          name: weekNumber
+        - schema:
+            type: integer
+          in: query
+          name: weekNumberFrom
+        - schema:
+            type: integer
+          in: query
+          name: weekNumberTo
+        - schema:
+            type: string
+          in: query
+          name: semester
+  /api/timetable/getTimeTableForStudent:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - timeTable-controller
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeTableDto'
+      operationId: getTimeTableForStudent
+      x-stoplight:
+        id: 9ggh69z20mau6
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: studentName
+        - schema:
+            type: string
+            format: date
+          in: query
+          name: courseDate
+        - schema:
+            type: integer
+          in: query
+          name: weekNumber
+        - schema:
+            type: integer
+          in: query
+          name: weekNumberFrom
+        - schema:
+            type: integer
+          in: query
+          name: weekNumberTo
+        - schema:
+            type: string
+          in: query
+          name: semester
+  /api/courses/cancelCourse:
+    post:
+      summary: Your POST endpoint
+      tags:
+        - course-controller
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  x-stoplight:
+                    id: 8dtfw0hanwrol
+      responses:
+        default:
+          description: Default
+      operationId: cancelCourse
+      x-stoplight:
+        id: zvkdk1rme12de
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: courseId
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: date
 components:
   schemas:
     CourseDto:
@@ -303,23 +474,6 @@ components:
             $ref: '#/components/schemas/CourseDto'
       x-stoplight:
         id: k32hre22f0y9p
-    TeacherDto:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int32
-        name:
-          type: string
-        birthDate:
-          type: string
-          format: date
-        courses:
-          type: array
-          items:
-            $ref: '#/components/schemas/CourseDto'
-      x-stoplight:
-        id: uyz9xqiy2tghz
     HistoryDataStudentDto:
       type: object
       properties:
@@ -358,3 +512,40 @@ components:
           format: date-time
       x-stoplight:
         id: lbpli7zicaq6j
+    TeacherDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseDto'
+      x-stoplight:
+        id: uyz9xqiy2tghz
+    TimeTableDto:
+      title: TimeTableDto
+      x-stoplight:
+        id: hz4mp9bym3gmf
+      type: object
+      properties:
+        courseName:
+          type: string
+          x-stoplight:
+            id: vtcn51nwa7vox
+        startDate:
+          type: string
+          format: date-time
+          x-stoplight:
+            id: ibtyq9tsg2xeu
+        endDate:
+          type: string
+          format: date-time
+          x-stoplight:
+            id: egkkamtzu9n75

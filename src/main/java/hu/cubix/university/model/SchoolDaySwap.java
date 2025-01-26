@@ -1,11 +1,8 @@
 package hu.cubix.university.model;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,25 +19,17 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Cacheable
+@Builder
 @Entity
 @Audited
-public class Teacher {
+public class SchoolDaySwap {
     @Id
     @GeneratedValue
     @EqualsAndHashCode.Include
     private int id;
 
-    private String name;
+    private LocalDate schoolDay;
 
-    private LocalDate birthDate;
-
-    @ManyToMany
-    @JoinTable(
-            name = "course_teacher",
-            joinColumns = @JoinColumn(name = "teacher_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private Set<Course> courses;
+    private LocalDate swappedDay;
 }

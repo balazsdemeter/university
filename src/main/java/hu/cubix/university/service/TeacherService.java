@@ -17,4 +17,8 @@ public class TeacherService {
         Teacher teacher = teacherRepository.findById(id).orElse(null);
         return teacherMapper.teacherToDto(teacher);
     }
+
+    public Teacher findByName(String name) {
+        return teacherRepository.findTeacherByName(name).orElse(null);
+    }
 }

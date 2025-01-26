@@ -1,0 +1,2 @@
+create table course_time_table_aud (course_id integer not null, id integer not null, rev integer not null, revtype smallint, primary key (course_id, id, rev));
+alter table if exists course_time_table_aud add constraint FKd5w8uob6ouxbdnqic94e4emm1 foreign key (rev) references revinfo;

@@ -4,8 +4,10 @@ import hu.cubix.university.model.Course;
 import hu.cubix.university.model.Student;
 import hu.cubix.university.model.Teacher;
 import hu.cubix.university.repository.CourseRepository;
+import hu.cubix.university.repository.SchoolDaySwapRepository;
 import hu.cubix.university.repository.StudentRepository;
 import hu.cubix.university.repository.TeacherRepository;
+import hu.cubix.university.repository.TimeTableRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class InitDbService {
     private final CourseRepository courseRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
+    private final TimeTableRepository timeTableRepository;
     private final JdbcTemplate jdbcTemplate;
 
     @Transactional
@@ -28,6 +31,7 @@ public class InitDbService {
         courseRepository.deleteAll();
         teacherRepository.deleteAll();
         studentRepository.deleteAll();
+        timeTableRepository.deleteAll();
     }
 
     @Transactional

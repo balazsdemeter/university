@@ -4,10 +4,14 @@ import com.querydsl.core.types.Predicate;
 import hu.cubix.university.api.CourseControllerApi;
 import hu.cubix.university.api.model.CourseDto;
 import hu.cubix.university.api.model.HistoryDataCourseDto;
+import hu.cubix.university.api.model.SendMessageRequest;
+import hu.cubix.university.api.model.StudentDto;
 import hu.cubix.university.mapper.HistoryDataMapper;
 import hu.cubix.university.model.Course;
 import hu.cubix.university.model.HistoryData;
 import hu.cubix.university.service.CourseService;
+import hu.cubix.university.ws.ChatMessage;
+import hu.cubix.university.ws.CourseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Pageable;
@@ -16,12 +20,15 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.SortDefault;
 import org.springframework.data.web.querydsl.QuerydslPredicateArgumentResolver;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +41,7 @@ public class CourseController implements CourseControllerApi {
     private final HistoryDataMapper historyDataMapper;
     private final PageableHandlerMethodArgumentResolver pageableResolver;
     private final QuerydslPredicateArgumentResolver prediacateResolver;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public Optional<NativeWebRequest> getRequest() {
@@ -95,5 +103,21 @@ public class CourseController implements CourseControllerApi {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public ResponseEntity<Void> addToTimeTable(Integer courseId, String startTime, String endTime, String dayOfWeek, String semester) {
+        courseService.addToTimeTable(courseId, startTime, endTime, dayOfWeek, semester);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> cancelCourse(Integer courseId, LocalDateTime date, SendMessageRequest sendMessageRequest) {
+        CourseDto courseDto = courseService.findById(courseId);
+        List<StudentDto> students = courseDto.getStudents();
+        students.forEach(studentDto -> {
+            this.messagingTemplate.convertAndSend("/topic/timetable/" + studentDto.getId(), new CourseMessage(courseDto.getName(), date, sendMessageRequest.getMessage()));
+        });
+        return ResponseEntity.ok().build();
     }
 }

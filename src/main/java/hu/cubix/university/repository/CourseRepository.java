@@ -21,7 +21,7 @@ public interface CourseRepository extends
         QuerydslPredicateExecutor<Course>,
         QuerydslBinderCustomizer<QCourse> {
 
-    @EntityGraph(attributePaths = {"teachers", "students"})
+    @EntityGraph(attributePaths = {"teachers", "students", "timeTables"})
     Optional<Course> findById(Integer id);
 
     @Override

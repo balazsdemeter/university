@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -15,6 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
+import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.Set;
 
 @Getter
@@ -25,29 +28,21 @@ import java.util.Set;
 @Builder
 @Entity
 @Audited
-public class Course {
+public class TimeTable {
     @Id
     @GeneratedValue
     @EqualsAndHashCode.Include
     private int id;
 
-    private String name;
+    @ManyToOne
+    private Course course;
 
-    @ManyToMany
-    @JoinTable(
-            name = "course_student",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private Set<Student> students;
+    private LocalTime starTime;
 
-    @ManyToMany
-    @JoinTable(
-            name = "course_teacher",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "teacher_id"))
-    private Set<Teacher> teachers;
+    private LocalTime endTime;
 
-    @OneToMany
-    @JoinColumn(name = "course_id")
-    private Set<TimeTable> timeTables;
+    private DayOfWeek dayOfWeek;
+
+    @ManyToOne
+    private Semester semester;
 }

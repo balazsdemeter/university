@@ -6,6 +6,7 @@ import hu.cubix.university.mapper.CourseMapper;
 import hu.cubix.university.model.Course;
 import hu.cubix.university.model.HistoryData;
 import hu.cubix.university.model.Student;
+import hu.cubix.university.model.TimeTable;
 import hu.cubix.university.repository.CourseRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,8 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ import java.util.Set;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
+    private final TimeTableService timeTableService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -110,5 +114,15 @@ public class CourseService {
         }
 
         return semesterCount/studentCount;
+    }
+
+    public void addToTimeTable(Integer courseId, String startTime, String endTime, String dayOfWeek, String semester) {
+        Optional<Course> optional = courseRepository.findById(courseId);
+        if (optional.isEmpty()) {
+            return;
+        }
+
+        Course course = optional.get();
+        timeTableService.addCourseToTimeTable(course, LocalTime.parse(startTime), LocalTime.parse(endTime), dayOfWeek, semester);
     }
 }

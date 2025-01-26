@@ -1,11 +1,12 @@
 package hu.cubix.university.model;
 
+import hu.cubix.university.enums.SemesterEnum;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -25,29 +27,20 @@ import java.util.Set;
 @Builder
 @Entity
 @Audited
-public class Course {
+public class Semester {
     @Id
     @GeneratedValue
     @EqualsAndHashCode.Include
     private int id;
 
-    private String name;
+    @Enumerated(value= EnumType.STRING)
+    private SemesterEnum semester;
 
-    @ManyToMany
-    @JoinTable(
-            name = "course_student",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private Set<Student> students;
+    private LocalDate startDate;
 
-    @ManyToMany
-    @JoinTable(
-            name = "course_teacher",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "teacher_id"))
-    private Set<Teacher> teachers;
+    private int length;
 
     @OneToMany
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "semester_id")
     private Set<TimeTable> timeTables;
 }
