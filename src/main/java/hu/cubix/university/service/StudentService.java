@@ -5,6 +5,7 @@ import hu.cubix.university.aspect.Retryable;
 import hu.cubix.university.mapper.StudentMapper;
 import hu.cubix.university.model.HistoryData;
 import hu.cubix.university.model.Image;
+import hu.cubix.university.model.Message;
 import hu.cubix.university.model.Student;
 import hu.cubix.university.repository.ImageRepository;
 import hu.cubix.university.repository.StudentRepository;
@@ -15,6 +16,7 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionType;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
@@ -33,8 +36,8 @@ import java.util.concurrent.TimeoutException;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
-    private final MockService mockService;
     private final ImageRepository imageRepository;
+    private final CallCentralStudentService studentService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -50,7 +53,7 @@ public class StudentService {
     public void syncStudents() throws TimeoutException {
         List<Student> students = studentRepository.findAll();
         for (Student student : students) {
-            int numberOfFreeSemesters = mockService.getNumberOfFreeSemesters(student.getExternalId());
+            Integer numberOfFreeSemesters = studentService.getNumberOfFreeSemestersByStudentId(student.getExternalId());
             student.setNumberOfFreeSemesters(numberOfFreeSemesters);
             studentRepository.save(student);
         }
@@ -139,5 +142,17 @@ public class StudentService {
 
     public Student findByName(String name) {
         return studentRepository.findStudentByName(name).orElse(null);
+    }
+
+    @JmsListener(destination = "payments", containerFactory = "jmsFactory")
+    public void onPaymentMessage(Message message) {
+        Integer studentId = message.getStudentId();
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student != null) {
+            student.setFinanceAmount(message.getAmount());
+            studentRepository.save(student);
+        } else {
+            System.out.println("student not found with id: " + studentId);
+        }
     }
 }

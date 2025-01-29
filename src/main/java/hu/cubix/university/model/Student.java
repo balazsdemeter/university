@@ -44,6 +44,8 @@ public class Student {
 
     private Integer numberOfFreeSemesters;
 
+    private Integer financeAmount;
+
     @OneToMany
     @JoinColumn(name = "student_id")
     private Set<Image> images;

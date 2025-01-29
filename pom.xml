@@ -152,6 +152,17 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-messaging</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+			<version>4.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-artemis</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -229,6 +240,26 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.sun.xml.ws</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- The name of your generated source package -->
+					<packageName>hu.cubix.university.wsclient</packageName>
+					<wsdlUrls>
+						<wsdlUrl>http://localhost:8081/services/semesterInfo?wsdl</wsdlUrl>
+					</wsdlUrls>
+					<bindingDirectory>${basedir}/wsdl</bindingDirectory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
