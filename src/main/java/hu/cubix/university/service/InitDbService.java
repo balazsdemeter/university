@@ -3,13 +3,15 @@ package hu.cubix.university.service;
 import hu.cubix.university.model.Course;
 import hu.cubix.university.model.Student;
 import hu.cubix.university.model.Teacher;
+import hu.cubix.university.model.UniversityUser;
 import hu.cubix.university.repository.CourseRepository;
-import hu.cubix.university.repository.SchoolDaySwapRepository;
 import hu.cubix.university.repository.StudentRepository;
 import hu.cubix.university.repository.TeacherRepository;
 import hu.cubix.university.repository.TimeTableRepository;
+import hu.cubix.university.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,8 @@ public class InitDbService {
     private final StudentRepository studentRepository;
     private final TimeTableRepository timeTableRepository;
     private final JdbcTemplate jdbcTemplate;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void deleteDb() {
@@ -58,10 +62,10 @@ public class InitDbService {
         );
 
         studentRepository.save(Student.builder()
-                        .birthDate(LocalDate.now())
-                        .semester(1)
-                        .courses(courses1)
-                        .name("student_1")
+                .birthDate(LocalDate.now())
+                .semester(1)
+                .courses(courses1)
+                .name("student_1")
                 .build());
 
         Set<Course> courses2 = new HashSet<>();
@@ -72,5 +76,18 @@ public class InitDbService {
                 .courses(courses2)
                 .name("student_2")
                 .build());
+
+        createUsersIfNeeded();
+    }
+
+    @Transactional
+    public void createUsersIfNeeded() {
+        if (!userRepository.existsById("admin")) {
+            userRepository.save(new UniversityUser("admin", passwordEncoder.encode("pass"), Set.of("admin", "user")));
+        }
+
+        if (!userRepository.existsById("user")) {
+            userRepository.save(new UniversityUser("user", passwordEncoder.encode("pass"), Set.of("user")));
+        }
     }
 }
