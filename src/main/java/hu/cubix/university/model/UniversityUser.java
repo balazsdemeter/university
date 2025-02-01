@@ -27,4 +27,6 @@ public class UniversityUser {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles;
+
+    private String facebookId;
 }

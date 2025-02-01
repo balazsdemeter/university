@@ -83,11 +83,11 @@ public class InitDbService {
     @Transactional
     public void createUsersIfNeeded() {
         if (!userRepository.existsById("admin")) {
-            userRepository.save(new UniversityUser("admin", passwordEncoder.encode("pass"), Set.of("admin", "user")));
+            userRepository.save(new UniversityUser("admin", passwordEncoder.encode("pass"), Set.of("admin", "user"), null));
         }
 
         if (!userRepository.existsById("user")) {
-            userRepository.save(new UniversityUser("user", passwordEncoder.encode("pass"), Set.of("user")));
+            userRepository.save(new UniversityUser("user", passwordEncoder.encode("pass"), Set.of("user"), null));
         }
     }
 }

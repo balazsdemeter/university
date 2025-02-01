@@ -14,15 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class JwtLoginController {
 
-	private final AuthenticationManager authenticationManager;
-	
-	private final JwtService jwtService;
-	
-	@PostMapping("/api/login")
-	public String login(@RequestBody LoginDto loginDto) {
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
-		
-		return "\""+ jwtService.creatJwtToken((UserDetails)authentication.getPrincipal()) + "\"";
-	}
+    private final AuthenticationManager authenticationManager;
+
+    private final JwtService jwtService;
+
+    @PostMapping("/api/login")
+    public String login(@RequestBody LoginDto loginDto) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+
+        return "\"" + jwtService.creatJwtToken((UserDetails) authentication.getPrincipal()) + "\"";
+    }
+
+    @PostMapping("/api/login/facebook")
+    public String login(@RequestBody String accessToken) {
+        return "\"" + jwtService.createJwtTokenByFacebook(accessToken) + "\"";
+    }
 }
