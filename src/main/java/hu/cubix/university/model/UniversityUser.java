@@ -29,4 +29,6 @@ public class UniversityUser {
     private Set<String> roles;
 
     private String facebookId;
+
+    private String googleId;
 }
