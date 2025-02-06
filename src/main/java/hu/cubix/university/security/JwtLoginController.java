@@ -27,7 +27,12 @@ public class JwtLoginController {
     }
 
     @PostMapping("/api/login/facebook")
-    public String login(@RequestBody String accessToken) {
+    public String loginWithFacebook(@RequestBody String accessToken) {
         return "\"" + jwtService.createJwtTokenByFacebook(accessToken) + "\"";
+    }
+
+    @PostMapping("/api/login/google")
+    public String loginWithGoogle(@RequestBody String accessToken) {
+        return "\"" + jwtService.createJwtTokenByGoogle(accessToken) + "\"";
     }
 }
