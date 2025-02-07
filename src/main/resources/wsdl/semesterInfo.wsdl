@@ -1,0 +1,47 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://xmlws.centralstudentapplication.cubix.hu/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="SemesterServiceXmlWsImplService" targetNamespace="http://xmlws.centralstudentapplication.cubix.hu/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://xmlws.centralstudentapplication.cubix.hu/" elementFormDefault="unqualified" targetNamespace="http://xmlws.centralstudentapplication.cubix.hu/" version="1.0">
+            <xs:element name="getNumberOfFreeSemestersByStudentId" type="tns:getNumberOfFreeSemestersByStudentId"/>
+            <xs:element name="getNumberOfFreeSemestersByStudentIdResponse" type="tns:getNumberOfFreeSemestersByStudentIdResponse"/>
+            <xs:complexType name="getNumberOfFreeSemestersByStudentId">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="getNumberOfFreeSemestersByStudentIdResponse">
+                <xs:sequence>
+                    <xs:element name="return" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getNumberOfFreeSemestersByStudentId">
+        <wsdl:part element="tns:getNumberOfFreeSemestersByStudentId" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getNumberOfFreeSemestersByStudentIdResponse">
+        <wsdl:part element="tns:getNumberOfFreeSemestersByStudentIdResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="SemesterServiceXmlWs">
+        <wsdl:operation name="getNumberOfFreeSemestersByStudentId">
+            <wsdl:input message="tns:getNumberOfFreeSemestersByStudentId" name="getNumberOfFreeSemestersByStudentId"> </wsdl:input>
+            <wsdl:output message="tns:getNumberOfFreeSemestersByStudentIdResponse" name="getNumberOfFreeSemestersByStudentIdResponse"> </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SemesterServiceXmlWsImplServiceSoapBinding" type="tns:SemesterServiceXmlWs">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getNumberOfFreeSemestersByStudentId">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="getNumberOfFreeSemestersByStudentId">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getNumberOfFreeSemestersByStudentIdResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SemesterServiceXmlWsImplService">
+        <wsdl:port binding="tns:SemesterServiceXmlWsImplServiceSoapBinding" name="SemesterServiceXmlWsImplPort">
+            <soap:address location="http://localhost:8081/services/semesterInfo"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

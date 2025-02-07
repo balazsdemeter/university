@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -52,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/students/**").hasAnyAuthority("user", "admin")
                         .requestMatchers(HttpMethod.DELETE, "/api/students/**").hasAnyAuthority("user", "admin")
                         .requestMatchers(HttpMethod.GET, "api/images/**").hasAnyAuthority("user", "admin")
+                        .requestMatchers(new AntPathRequestMatcher("/services/**")).permitAll()
                         .anyRequest().authenticated()
                 )
         ;

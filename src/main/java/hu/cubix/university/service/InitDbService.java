@@ -1,10 +1,14 @@
 package hu.cubix.university.service;
 
+import hu.cubix.university.enums.SemesterEnum;
 import hu.cubix.university.model.Course;
+import hu.cubix.university.model.Semester;
 import hu.cubix.university.model.Student;
 import hu.cubix.university.model.Teacher;
+import hu.cubix.university.model.TimeTable;
 import hu.cubix.university.model.UniversityUser;
 import hu.cubix.university.repository.CourseRepository;
+import hu.cubix.university.repository.SemesterRepository;
 import hu.cubix.university.repository.StudentRepository;
 import hu.cubix.university.repository.TeacherRepository;
 import hu.cubix.university.repository.TimeTableRepository;
@@ -15,8 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -29,6 +36,7 @@ public class InitDbService {
     private final JdbcTemplate jdbcTemplate;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SemesterRepository semesterRepository;
 
     @Transactional
     public void deleteDb() {
@@ -76,6 +84,24 @@ public class InitDbService {
                 .courses(courses2)
                 .name("student_2")
                 .build());
+
+        List<Semester> semesterBySemester = semesterRepository.findSemesterBySemester(SemesterEnum.SPRING);
+
+        TimeTable timeTable1 = new TimeTable();
+        timeTable1.setCourse(test1);
+        timeTable1.setStarTime(LocalTime.of(8, 0));
+        timeTable1.setEndTime(LocalTime.of(10, 0));
+        timeTable1.setDayOfWeek(DayOfWeek.MONDAY);
+        timeTable1.setSemester(semesterBySemester.get(0));
+        timeTableRepository.save(timeTable1);
+
+        TimeTable timeTable2 = new TimeTable();
+        timeTable2.setCourse(test2);
+        timeTable2.setStarTime(LocalTime.of(14, 0));
+        timeTable2.setEndTime(LocalTime.of(16, 0));
+        timeTable2.setDayOfWeek(DayOfWeek.THURSDAY);
+        timeTable2.setSemester(semesterBySemester.get(0));
+        timeTableRepository.save(timeTable2);
 
         createUsersIfNeeded();
     }

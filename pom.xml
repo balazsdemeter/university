@@ -179,6 +179,12 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-messaging</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+			<version>4.0.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -271,9 +277,7 @@
 				<configuration>
 					<!-- The name of your generated source package -->
 					<packageName>hu.cubix.university.wsclient</packageName>
-					<wsdlUrls>
-						<wsdlUrl>http://localhost:8081/services/semesterInfo?wsdl</wsdlUrl>
-					</wsdlUrls>
+					<wsdlDirectory>${project.basedir}/src/main/resources/wsdl</wsdlDirectory>
 					<bindingDirectory>${basedir}/wsdl</bindingDirectory>
 				</configuration>
 			</plugin>

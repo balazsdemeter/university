@@ -2,10 +2,9 @@ package hu.cubix.university.web;
 
 import hu.cubix.university.api.TimeTableControllerApi;
 import hu.cubix.university.api.model.TimeTableDto;
-import hu.cubix.university.model.Teacher;
+import hu.cubix.university.mapper.TimeTableMapper;
 import hu.cubix.university.model.TimeTable;
 import hu.cubix.university.service.SchoolDaySwapService;
-import hu.cubix.university.service.TeacherService;
 import hu.cubix.university.service.TimeTableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,9 +42,7 @@ public class TimeTableController implements TimeTableControllerApi {
             return ResponseEntity.notFound().build();
         }
 
-        List<TimeTableDto> timeTableList = mapToTimeTableDtos(map);
-
-        return ResponseEntity.ok(timeTableList);
+        return ResponseEntity.ok(TimeTableMapper.mapToTimeTableDtos(map));
     }
 
     @Override
@@ -57,22 +53,6 @@ public class TimeTableController implements TimeTableControllerApi {
             return ResponseEntity.notFound().build();
         }
 
-        List<TimeTableDto> timeTableList = mapToTimeTableDtos(map);
-
-        return ResponseEntity.ok(timeTableList);
-    }
-
-    private static List<TimeTableDto> mapToTimeTableDtos(Map<LocalDate, List<TimeTable>> map) {
-        List<TimeTableDto> timeTableList = new ArrayList<>();
-        map.forEach((date, timeTables) -> {
-            timeTables.forEach(timeTable -> {
-                TimeTableDto timeTableDto = new TimeTableDto();
-                timeTableDto.setCourseName(timeTable.getCourse().getName());
-                timeTableDto.setStartDate(date.atTime(timeTable.getStarTime()));
-                timeTableDto.setEndDate(date.atTime(timeTable.getEndTime()));
-                timeTableList.add(timeTableDto);
-            });
-        });
-        return timeTableList;
+        return ResponseEntity.ok(TimeTableMapper.mapToTimeTableDtos(map));
     }
 }
