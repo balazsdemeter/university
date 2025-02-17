@@ -30,6 +30,9 @@
         <module name="university" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="jmsproxy" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
