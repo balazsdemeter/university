@@ -5,6 +5,19 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/bonus/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/bonus-api/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/booking/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/config/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/currency/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/currency-api/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/discovery/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/flights/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/flights-api/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/common-module/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/common-security/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/login/pom.xml" />
       </list>
     </option>
   </component>

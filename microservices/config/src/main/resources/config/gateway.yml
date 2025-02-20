@@ -14,15 +14,24 @@ spring:
         - Path=/currency/**
         filters:
         - RewritePath=/currency(?<segment>/?.*), /api$\{segment}
+        - TokenCheck
       - id: flights
         uri: lb://flights
         predicates:
         - Path=/flights/**
         filters:
-        - RewritePath=/flights(?<segment>/?.*), /api$\{segment}
+        - RewritePath=/flights(?<segment>/?.*), /api/flights${segment}
+        - TokenCheck
       - id: bonus
         uri: lb://bonus
         predicates:
         - Path=/bonus/**
         filters:
-        - RewritePath=/bonus(?<segment>/?.*), /api$\{segment}
+        - RewritePath=/bonus(?<segment>/?.*), /api/bonus${segment}
+        - TokenCheck
+      - id: login
+        uri: lb://login
+        predicates:
+        - Path=/login/**
+        filters:
+        - RewritePath=/login(?<segment>/?.*), /api/login${segment}

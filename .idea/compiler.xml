@@ -7,6 +7,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="common-security" />
+        <module name="booking" />
+        <module name="bonus" />
+        <module name="discovery" />
+        <module name="currency-api" />
+        <module name="currency" />
+        <module name="flights-api" />
+        <module name="flights" />
+        <module name="config" />
+        <module name="gateway" />
+        <module name="bonus-api" />
       </profile>
       <profile name="Annotation profile for university" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -29,6 +40,15 @@
         </processorPath>
         <module name="university" />
       </profile>
+      <profile name="Annotation profile for login" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.m2/repository2/org/projectlombok/lombok/1.18.26/lombok-1.18.26.jar" />
+        </processorPath>
+        <module name="login" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="jmsproxy" target="17" />
@@ -36,6 +56,17 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="bonus" options="-parameters" />
+      <module name="bonus-api" options="-parameters" />
+      <module name="booking" options="-parameters" />
+      <module name="config" options="-parameters" />
+      <module name="currency" options="-parameters" />
+      <module name="currency-api" options="-parameters" />
+      <module name="discovery" options="-parameters" />
+      <module name="flights" options="-parameters" />
+      <module name="flights-api" options="-parameters" />
+      <module name="gateway" options="-parameters" />
+      <module name="login" options="-parameters" />
       <module name="university" options="-parameters" />
     </option>
   </component>

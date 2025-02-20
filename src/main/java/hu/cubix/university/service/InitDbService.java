@@ -78,6 +78,8 @@ public class InitDbService {
                 .build());
 
         createUsersIfNeeded();
+
+        courseRepository.findAll();
     }
 
     @Transactional
